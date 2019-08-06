@@ -10,6 +10,7 @@ import loaderUtils from 'loader-utils'
 
 const DEFAULT_IMAGE_CLASS_PATH = require.resolve( './modules/adaptiveImage' )
 const DEFAULT_IMAGE_NAME_FORMAT = '[hash].[ext]'
+const DEFAULT_AUTO_MODE = false
 const DEFAULT_SCALINGS = { '@2x': 2, '@3x': 3 }
 
 module.exports = async function( content: Buffer ) {
@@ -17,7 +18,8 @@ module.exports = async function( content: Buffer ) {
     if( this.cacheable ) this.cacheable()
 
     const query = loaderUtils.parseQuery( this.query )
-    const wrapper = createImageWrapper( loaderUtils.stringifyRequest( this, query.imageClassPath || DEFAULT_IMAGE_CLASS_PATH ) )
+    const autoMode = query.autoMode || DEFAULT_AUTO_MODE
+    const wrapper = createImageWrapper( loaderUtils.stringifyRequest( this, query.imageClassPath || DEFAULT_IMAGE_CLASS_PATH ), {autoMode} )
     const nameFormat = query.name || DEFAULT_IMAGE_NAME_FORMAT
     const scalings = query.scalings || DEFAULT_SCALINGS
     const size = ImageSizeResolver( this.resourcePath )
